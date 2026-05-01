@@ -1,0 +1,1288 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>가천대 입시설명회 출석 등록</title>
+<style>
+  /* ============ 폰트 & 변수 ============ */
+  @import url('https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=IBM+Plex+Sans+KR:wght@300;400;500;600;700&display=swap');
+
+  :root {
+    --gachon-navy: #002855;
+    --gachon-navy-deep: #001838;
+    --gachon-blue: #0a3d8a;
+    --gachon-gold: #c9a961;
+    --gachon-gold-light: #e5c98a;
+    --bg: #f5f1ea;
+    --bg-card: #ffffff;
+    --ink: #1a1a1a;
+    --ink-soft: #555;
+    --ink-mute: #888;
+    --line: #e3ddd2;
+    --error: #c0392b;
+    --success: #1e7e34;
+    --warn: #d97706;
+    --pre-tag: #002855;
+    --walk-tag: #c9a961;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    background: var(--bg);
+    font-family: 'IBM Plex Sans KR', -apple-system, sans-serif;
+    color: var(--ink);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
+
+  body {
+    background:
+      radial-gradient(ellipse at top right, rgba(201, 169, 97, 0.08), transparent 60%),
+      radial-gradient(ellipse at bottom left, rgba(0, 40, 85, 0.05), transparent 60%),
+      var(--bg);
+  }
+
+  /* ============ 공통 레이아웃 ============ */
+  .app {
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 0 20px 80px;
+    min-height: 100vh;
+  }
+  .app.admin { max-width: 1100px; }
+
+  /* ============ 헤더 ============ */
+  .header {
+    padding: 32px 0 28px;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 32px;
+    position: relative;
+  }
+  .header-mark {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Gowun Batang', serif;
+    font-size: 13px;
+    color: var(--gachon-navy);
+    letter-spacing: 0.15em;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+  .header-mark::before {
+    content: '';
+    width: 24px; height: 1px;
+    background: var(--gachon-gold);
+  }
+  .header-title {
+    font-family: 'Gowun Batang', serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--gachon-navy-deep);
+    letter-spacing: -0.02em;
+    line-height: 1.25;
+  }
+  .header-sub {
+    font-size: 13px;
+    color: var(--ink-mute);
+    margin-top: 8px;
+    letter-spacing: 0.02em;
+  }
+
+  /* ============ 카드 ============ */
+  .card {
+    background: var(--bg-card);
+    border-radius: 4px;
+    border: 1px solid var(--line);
+    padding: 28px 24px;
+    margin-bottom: 16px;
+    position: relative;
+  }
+  .card-corner {
+    position: absolute;
+    top: -1px; right: -1px;
+    width: 24px; height: 24px;
+    border-top: 2px solid var(--gachon-gold);
+    border-right: 2px solid var(--gachon-gold);
+  }
+
+  .step-label {
+    font-family: 'Gowun Batang', serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.25em;
+    color: var(--gachon-gold);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+  }
+  .step-title {
+    font-family: 'Gowun Batang', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--gachon-navy-deep);
+    margin-bottom: 6px;
+    letter-spacing: -0.01em;
+  }
+  .step-desc {
+    font-size: 13.5px;
+    color: var(--ink-soft);
+    margin-bottom: 24px;
+    line-height: 1.55;
+  }
+
+  /* ============ 입력 ============ */
+  .field { margin-bottom: 18px; }
+  .field-label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ink-soft);
+    letter-spacing: 0.08em;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+  }
+  .field-label .req { color: var(--error); margin-left: 2px; }
+
+  .input, .select {
+    width: 100%;
+    padding: 14px 16px;
+    border: 1.5px solid var(--line);
+    border-radius: 3px;
+    font-size: 16px;
+    font-family: inherit;
+    background: var(--bg-card);
+    color: var(--ink);
+    transition: all 0.15s ease;
+    -webkit-appearance: none;
+  }
+  .input:focus, .select:focus {
+    outline: none;
+    border-color: var(--gachon-navy);
+    box-shadow: 0 0 0 3px rgba(0, 40, 85, 0.08);
+  }
+  .input.large {
+    font-size: 22px;
+    text-align: center;
+    letter-spacing: 0.1em;
+    font-weight: 600;
+    padding: 18px;
+  }
+
+  /* 토글 (주차여부) */
+  .toggle-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .toggle-btn {
+    padding: 16px;
+    border: 1.5px solid var(--line);
+    border-radius: 3px;
+    background: var(--bg-card);
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--ink-soft);
+    cursor: pointer;
+    transition: all 0.15s;
+    text-align: center;
+  }
+  .toggle-btn.active {
+    background: var(--gachon-navy);
+    color: white;
+    border-color: var(--gachon-navy);
+  }
+
+  /* 버튼 */
+  .btn {
+    display: block;
+    width: 100%;
+    padding: 16px;
+    background: var(--gachon-navy);
+    color: white;
+    border: none;
+    border-radius: 3px;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: all 0.15s;
+    position: relative;
+    overflow: hidden;
+  }
+  .btn:hover { background: var(--gachon-navy-deep); }
+  .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .btn.gold { background: var(--gachon-gold); color: var(--gachon-navy-deep); }
+  .btn.gold:hover { background: var(--gachon-gold-light); }
+  .btn.ghost {
+    background: transparent;
+    color: var(--gachon-navy);
+    border: 1.5px solid var(--gachon-navy);
+  }
+  .btn.ghost:hover { background: var(--gachon-navy); color: white; }
+  .btn.danger { background: var(--error); }
+  .btn-row { display: flex; gap: 8px; }
+  .btn-row .btn { flex: 1; }
+
+  /* ============ 매치 결과 (사전신청자 카드) ============ */
+  .match-list { display: flex; flex-direction: column; gap: 10px; }
+  .match-item {
+    padding: 16px 18px;
+    border: 1.5px solid var(--line);
+    border-radius: 3px;
+    background: var(--bg-card);
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+  }
+  .match-item:hover {
+    border-color: var(--gachon-navy);
+    background: #fafaf6;
+  }
+  .match-item.selected {
+    border-color: var(--gachon-navy);
+    background: #f0f4f9;
+  }
+  .match-item.disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    background: #f6f3ed;
+  }
+  .match-name {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--gachon-navy-deep);
+    margin-bottom: 3px;
+  }
+  .match-school {
+    font-size: 13px;
+    color: var(--ink-mute);
+  }
+  .match-badge {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    padding: 4px 8px;
+    border-radius: 2px;
+    background: var(--gachon-gold);
+    color: var(--gachon-navy-deep);
+    white-space: nowrap;
+  }
+  .match-badge.done {
+    background: #e8e8e8;
+    color: var(--ink-mute);
+  }
+
+  /* ============ 결과 화면 ============ */
+  .result {
+    text-align: center;
+    padding: 40px 20px;
+  }
+  .result-tag {
+    display: inline-block;
+    padding: 6px 16px;
+    border-radius: 2px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    margin-bottom: 24px;
+  }
+  .result-tag.pre {
+    background: var(--gachon-navy);
+    color: white;
+  }
+  .result-tag.walk {
+    background: var(--gachon-gold);
+    color: var(--gachon-navy-deep);
+  }
+  .result-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid;
+    border-radius: 50%;
+    font-size: 40px;
+    line-height: 1;
+  }
+  .result-icon.pre {
+    border-color: var(--gachon-navy);
+    color: var(--gachon-navy);
+  }
+  .result-icon.walk {
+    border-color: var(--gachon-gold);
+    color: var(--gachon-gold);
+  }
+  .result-name {
+    font-family: 'Gowun Batang', serif;
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--gachon-navy-deep);
+    margin-bottom: 6px;
+    letter-spacing: -0.02em;
+  }
+  .result-school {
+    font-size: 14px;
+    color: var(--ink-soft);
+    margin-bottom: 24px;
+  }
+  .result-info {
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    padding: 16px 0;
+    margin: 24px 0;
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    font-size: 13px;
+  }
+  .result-info-label { color: var(--ink-mute); margin-bottom: 2px; font-size: 11px; letter-spacing: 0.1em; }
+  .result-info-value { font-weight: 600; color: var(--ink); }
+
+  /* ============ 알림 ============ */
+  .alert {
+    padding: 12px 14px;
+    border-radius: 3px;
+    font-size: 13.5px;
+    margin-bottom: 16px;
+    border-left: 3px solid;
+    line-height: 1.5;
+  }
+  .alert.error {
+    background: #fff0ee;
+    border-color: var(--error);
+    color: #8b1c12;
+  }
+  .alert.warn {
+    background: #fff8e6;
+    border-color: var(--warn);
+    color: #7a4a00;
+  }
+  .alert.info {
+    background: #f0f4f9;
+    border-color: var(--gachon-navy);
+    color: var(--gachon-navy-deep);
+  }
+
+  /* ============ 로딩 ============ */
+  .loading {
+    text-align: center;
+    padding: 40px;
+    color: var(--ink-mute);
+    font-size: 14px;
+  }
+  .loading::after {
+    content: '...';
+    animation: dots 1.4s steps(4) infinite;
+  }
+  @keyframes dots {
+    0%, 20% { content: '.'; }
+    40% { content: '..'; }
+    60%, 100% { content: '...'; }
+  }
+
+  /* ============ 푸터 ============ */
+  .footer {
+    text-align: center;
+    margin-top: 48px;
+    padding-top: 24px;
+    font-size: 11px;
+    color: var(--ink-mute);
+    letter-spacing: 0.1em;
+    border-top: 1px solid var(--line);
+  }
+  .footer-link {
+    color: var(--ink-mute);
+    text-decoration: none;
+    border-bottom: 1px dotted var(--ink-mute);
+  }
+
+  /* ============ 관리자 페이지 ============ */
+  .admin-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+  .stat {
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    padding: 20px 22px;
+    border-radius: 3px;
+    position: relative;
+  }
+  .stat::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px; height: 100%;
+    background: var(--gachon-navy);
+  }
+  .stat.gold::before { background: var(--gachon-gold); }
+  .stat.total::before { background: var(--gachon-navy-deep); }
+  .stat.parking::before { background: #888; }
+  .stat-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--ink-mute);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .stat-value {
+    font-family: 'Gowun Batang', serif;
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--gachon-navy-deep);
+    line-height: 1;
+  }
+  .stat-sub {
+    font-size: 12px;
+    color: var(--ink-soft);
+    margin-top: 6px;
+  }
+
+  .table-wrap {
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .table-head {
+    padding: 18px 22px;
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .table-head h2 {
+    font-family: 'Gowun Batang', serif;
+    font-size: 18px;
+    color: var(--gachon-navy-deep);
+  }
+  .table-head .actions { display: flex; gap: 8px; flex-wrap: wrap; }
+  .table-head .actions .btn { padding: 8px 14px; width: auto; font-size: 13px; }
+  .search-input {
+    padding: 8px 12px;
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    font-size: 13px;
+    width: 200px;
+    font-family: inherit;
+  }
+
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  .data-table th {
+    background: #fafaf6;
+    padding: 12px 14px;
+    text-align: left;
+    font-weight: 600;
+    color: var(--ink-soft);
+    border-bottom: 1px solid var(--line);
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .data-table td {
+    padding: 12px 14px;
+    border-bottom: 1px solid #f0ece3;
+    vertical-align: middle;
+  }
+  .data-table tr:hover td { background: #faf8f3; }
+  .tag-pre, .tag-walk {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 2px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+  }
+  .tag-pre { background: var(--gachon-navy); color: white; }
+  .tag-walk { background: var(--gachon-gold); color: var(--gachon-navy-deep); }
+
+  .icon-btn {
+    background: transparent;
+    border: 1px solid var(--line);
+    padding: 4px 10px;
+    border-radius: 2px;
+    font-family: inherit;
+    font-size: 11px;
+    cursor: pointer;
+    color: var(--ink-soft);
+  }
+  .icon-btn:hover { background: var(--gachon-navy); color: white; border-color: var(--gachon-navy); }
+
+  /* 모달 */
+  .modal-bg {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    padding: 20px;
+  }
+  .modal-bg.show { display: flex; }
+  .modal {
+    background: var(--bg-card);
+    border-radius: 4px;
+    padding: 28px;
+    max-width: 420px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+  .modal h3 {
+    font-family: 'Gowun Batang', serif;
+    font-size: 20px;
+    color: var(--gachon-navy-deep);
+    margin-bottom: 20px;
+  }
+
+  /* 모드 토글 */
+  .mode-switch {
+    position: fixed;
+    bottom: 16px;
+    right: 16px;
+    z-index: 50;
+  }
+  .mode-switch a {
+    display: inline-block;
+    padding: 8px 14px;
+    background: var(--gachon-navy-deep);
+    color: white;
+    text-decoration: none;
+    border-radius: 2px;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    opacity: 0.7;
+  }
+  .mode-switch a:hover { opacity: 1; }
+
+  /* 반응형 */
+  @media (max-width: 600px) {
+    .header-title { font-size: 24px; }
+    .stat-value { font-size: 28px; }
+    .data-table { font-size: 12px; }
+    .data-table th, .data-table td { padding: 8px 10px; }
+    .search-input { width: 100%; }
+  }
+
+  /* 페이드 인 */
+  .fade-in { animation: fadeIn 0.3s ease; }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===================== 참석자 등록 페이지 ===================== -->
+<div class="app" id="app-attendee">
+  <header class="header">
+    <div class="header-mark">GACHON UNIVERSITY · ADMISSIONS</div>
+    <h1 class="header-title">2027학년도<br>입시 설명회 출석 등록</h1>
+    <p class="header-sub">참석자 본인 확인 및 현장 등록</p>
+  </header>
+
+  <!-- STEP 1: 연락처 입력 -->
+  <section class="card fade-in" id="step-phone">
+    <div class="card-corner"></div>
+    <div class="step-label">STEP 01</div>
+    <h2 class="step-title">본인 확인</h2>
+    <p class="step-desc">신청 시 입력하신 연락처 11자리를 입력해 주세요.</p>
+
+    <div id="alert-phone"></div>
+
+    <div class="field">
+      <label class="field-label">휴대폰 번호 <span class="req">*</span></label>
+      <input type="tel" class="input large" id="input-phone"
+             placeholder="01012345678"
+             inputmode="numeric"
+             maxlength="13"
+             autocomplete="tel">
+    </div>
+
+    <button class="btn" id="btn-search" onclick="searchAttendee()">조회하기</button>
+  </section>
+
+  <!-- STEP 2: 신청자 선택 (동일 번호로 여러 명) -->
+  <section class="card fade-in" id="step-select" style="display:none;">
+    <div class="card-corner"></div>
+    <div class="step-label">STEP 02</div>
+    <h2 class="step-title">본인 선택</h2>
+    <p class="step-desc">조회된 사전신청자 목록입니다. 본인을 선택해 주세요.</p>
+
+    <div class="match-list" id="match-list"></div>
+
+    <div style="margin-top: 18px;">
+      <button class="btn ghost" onclick="goBack('phone')">← 다시 조회</button>
+    </div>
+  </section>
+
+  <!-- STEP 3: 사전신청자 - 주차 입력 -->
+  <section class="card fade-in" id="step-pre-parking" style="display:none;">
+    <div class="card-corner"></div>
+    <div class="step-label">STEP 03</div>
+    <h2 class="step-title">주차 여부</h2>
+    <p class="step-desc">차량을 가지고 오셨나요?</p>
+
+    <div id="pre-info" style="background: #f0f4f9; padding: 14px; border-radius: 3px; margin-bottom: 20px; font-size: 13px;"></div>
+
+    <div class="field">
+      <div class="toggle-group">
+        <button class="toggle-btn" data-parking="0" onclick="setParking(0, 'pre')">주차 안 함</button>
+        <button class="toggle-btn" data-parking="1" onclick="setParking(1, 'pre')">주차 함</button>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn ghost" onclick="goBack('select')">← 이전</button>
+      <button class="btn" id="btn-submit-pre" onclick="submitPre()" disabled>등록 완료</button>
+    </div>
+  </section>
+
+  <!-- STEP 4: 현장 등록 -->
+  <section class="card fade-in" id="step-walkin" style="display:none;">
+    <div class="card-corner"></div>
+    <div class="step-label">STEP 02</div>
+    <h2 class="step-title">현장 등록</h2>
+    <p class="step-desc">사전신청 내역이 없습니다. 현장 등록을 진행해 주세요.</p>
+
+    <div id="alert-walkin"></div>
+
+    <div class="field">
+      <label class="field-label">성명 <span class="req">*</span></label>
+      <input type="text" class="input" id="walkin-name" placeholder="홍길동" autocomplete="name">
+    </div>
+
+    <div class="field">
+      <label class="field-label">고교명 <span class="req">*</span></label>
+      <input type="text" class="input" id="walkin-school" placeholder="가천고등학교">
+    </div>
+
+    <div class="field">
+      <label class="field-label">연락처</label>
+      <input type="tel" class="input" id="walkin-phone" readonly style="background: #f6f3ed; color: var(--ink-mute);">
+    </div>
+
+    <div class="field">
+      <label class="field-label">주차 여부 <span class="req">*</span></label>
+      <div class="toggle-group">
+        <button class="toggle-btn" data-parking="0" onclick="setParking(0, 'walk')">주차 안 함</button>
+        <button class="toggle-btn" data-parking="1" onclick="setParking(1, 'walk')">주차 함</button>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn ghost" onclick="goBack('phone')">← 이전</button>
+      <button class="btn gold" id="btn-submit-walk" onclick="submitWalk()">현장 등록</button>
+    </div>
+  </section>
+
+  <!-- STEP 완료: 결과 -->
+  <section class="card fade-in" id="step-done" style="display:none;">
+    <div class="card-corner"></div>
+    <div class="result">
+      <div class="result-tag" id="result-tag"></div>
+      <div class="result-icon" id="result-icon">✓</div>
+      <div class="result-name" id="result-name"></div>
+      <div class="result-school" id="result-school"></div>
+
+      <div class="result-info">
+        <div>
+          <div class="result-info-label">주차</div>
+          <div class="result-info-value" id="result-parking"></div>
+        </div>
+        <div>
+          <div class="result-info-label">등록 시각</div>
+          <div class="result-info-value" id="result-time"></div>
+        </div>
+      </div>
+
+      <p style="font-size: 13px; color: var(--ink-soft); line-height: 1.6;">
+        등록이 완료되었습니다.<br>
+        설명회장 입장 시 진행요원 안내에 따라주시기 바랍니다.
+      </p>
+    </div>
+    <button class="btn ghost" style="margin-top: 16px;" onclick="reset()">다음 참석자</button>
+  </section>
+
+  <footer class="footer">
+    GACHON UNIVERSITY · OFFICE OF ADMISSIONS<br>
+    가천대학교 입학처
+  </footer>
+</div>
+
+
+<!-- ===================== 관리자 페이지 ===================== -->
+<div class="app admin" id="app-admin" style="display:none;">
+  <header class="header">
+    <div class="header-mark">ADMIN · 관리자 화면</div>
+    <h1 class="header-title">출석 등록 현황</h1>
+    <p class="header-sub" id="admin-sub">실시간 모니터링</p>
+  </header>
+
+  <!-- 비밀번호 입력 -->
+  <section class="card" id="admin-login">
+    <div class="step-label">관리자 인증</div>
+    <h2 class="step-title">비밀번호 입력</h2>
+    <p class="step-desc">관리자에게 부여받은 비밀번호를 입력하세요.</p>
+
+    <div id="alert-login"></div>
+
+    <div class="field">
+      <input type="password" class="input" id="admin-pw" placeholder="비밀번호" onkeypress="if(event.key==='Enter')adminLogin()">
+    </div>
+
+    <button class="btn" onclick="adminLogin()">접속</button>
+  </section>
+
+  <!-- 통계 + 테이블 -->
+  <div id="admin-content" style="display:none;">
+    <div class="admin-grid" id="stat-grid"></div>
+
+    <div class="table-wrap">
+      <div class="table-head">
+        <h2>등록 명단</h2>
+        <div class="actions">
+          <input type="text" class="search-input" id="search-input" placeholder="이름/고교/연락처 검색" oninput="renderTable()">
+          <button class="btn" onclick="refreshAdmin()">새로고침</button>
+          <button class="btn gold" onclick="exportExcel()">엑셀 다운로드</button>
+        </div>
+      </div>
+      <div style="overflow-x: auto;">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>구분</th>
+              <th>등록시각</th>
+              <th>성명</th>
+              <th>연락처</th>
+              <th>고교명</th>
+              <th>주차</th>
+              <th>비고</th>
+              <th>수정</th>
+            </tr>
+          </thead>
+          <tbody id="table-body"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    GACHON UNIVERSITY · OFFICE OF ADMISSIONS · ADMIN
+  </footer>
+</div>
+
+
+<!-- ===================== 모달 (수정용) ===================== -->
+<div class="modal-bg" id="modal-edit">
+  <div class="modal">
+    <h3>등록 정보 수정</h3>
+    <div id="alert-edit"></div>
+    <div class="field">
+      <label class="field-label">성명</label>
+      <input type="text" class="input" id="edit-name">
+    </div>
+    <div class="field">
+      <label class="field-label">고교명</label>
+      <input type="text" class="input" id="edit-school">
+    </div>
+    <div class="field">
+      <label class="field-label">연락처</label>
+      <input type="tel" class="input" id="edit-phone">
+    </div>
+    <div class="field">
+      <label class="field-label">주차 여부</label>
+      <select class="select" id="edit-parking">
+        <option value="주차">주차</option>
+        <option value="미주차">미주차</option>
+      </select>
+    </div>
+    <div class="field">
+      <label class="field-label">비고</label>
+      <input type="text" class="input" id="edit-note">
+    </div>
+    <div class="btn-row">
+      <button class="btn ghost" onclick="closeEdit()">취소</button>
+      <button class="btn" onclick="saveEdit()">저장</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ===================== 모드 전환 링크 ===================== -->
+<div class="mode-switch">
+  <a href="#" id="mode-link" onclick="toggleMode(); return false;">관리자 보기</a>
+</div>
+
+
+<script>
+/* ============================================================
+   설정: Apps Script 웹앱 URL을 여기에 붙여넣으세요!
+   ============================================================ */
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbycx-I0so2t_KDYjq5q_mSUKrivdIc1Ku0okxPBW4-d6-__30iiRsf3xHy8Qn4_iYS-/exec';
+/* ============================================================ */
+
+
+// ==================== 상태 관리 ====================
+let state = {
+  phone: '',
+  matches: [],
+  selected: null,        // 선택된 사전신청자
+  parking: null,         // 0 또는 1
+  mode: 'attendee',      // 'attendee' or 'admin'
+  adminPw: '',
+  records: []
+};
+
+// URL 해시로 모드 분기
+function checkMode() {
+  if (location.hash === '#admin') {
+    state.mode = 'admin';
+    document.getElementById('app-attendee').style.display = 'none';
+    document.getElementById('app-admin').style.display = 'block';
+    document.getElementById('mode-link').textContent = '참석자 보기';
+  } else {
+    state.mode = 'attendee';
+    document.getElementById('app-attendee').style.display = 'block';
+    document.getElementById('app-admin').style.display = 'none';
+    document.getElementById('mode-link').textContent = '관리자 보기';
+  }
+}
+function toggleMode() {
+  location.hash = state.mode === 'attendee' ? '#admin' : '';
+  location.reload();
+}
+window.addEventListener('hashchange', () => location.reload());
+
+
+// ==================== API 호출 헬퍼 ====================
+async function callApi(action, params = {}) {
+  if (!SCRIPT_URL || SCRIPT_URL === 'YOUR_APPS_SCRIPT_URL_HERE') {
+    return { success: false, error: 'Apps Script URL이 설정되지 않았습니다. 코드 상단의 SCRIPT_URL을 확인해 주세요.' };
+  }
+
+  const url = new URL(SCRIPT_URL);
+  url.searchParams.set('action', action);
+  for (const k in params) {
+    url.searchParams.set(k, typeof params[k] === 'object' ? JSON.stringify(params[k]) : params[k]);
+  }
+
+  try {
+    const res = await fetch(url.toString(), { method: 'GET', redirect: 'follow' });
+    const data = await res.json();
+    return data;
+  } catch (e) {
+    return { success: false, error: '네트워크 오류: ' + e.message };
+  }
+}
+
+
+// ==================== 유틸 ====================
+function normalizePhone(p) { return String(p || '').replace(/[^0-9]/g, ''); }
+function formatPhone(p) {
+  const n = normalizePhone(p);
+  if (n.length === 11) return `${n.slice(0,3)}-${n.slice(3,7)}-${n.slice(7)}`;
+  if (n.length === 10) return `${n.slice(0,3)}-${n.slice(3,6)}-${n.slice(6)}`;
+  return n;
+}
+function maskPhone(p) {
+  const n = normalizePhone(p);
+  if (n.length === 11) return `${n.slice(0,3)}-****-${n.slice(7)}`;
+  return n;
+}
+function showAlert(targetId, message, type = 'error') {
+  const el = document.getElementById(targetId);
+  if (!el) return;
+  el.innerHTML = `<div class="alert ${type}">${message}</div>`;
+}
+function clearAlert(targetId) {
+  const el = document.getElementById(targetId);
+  if (el) el.innerHTML = '';
+}
+
+// 화면 전환
+function showStep(step) {
+  ['step-phone', 'step-select', 'step-pre-parking', 'step-walkin', 'step-done'].forEach(id => {
+    document.getElementById(id).style.display = id === 'step-' + step ? 'block' : 'none';
+  });
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+function goBack(step) { showStep(step); }
+
+
+// ==================== 참석자 페이지 ====================
+
+// 연락처 입력 자동 포맷
+document.getElementById('input-phone').addEventListener('input', function(e) {
+  const cursor = this.selectionStart;
+  const before = this.value;
+  let val = normalizePhone(this.value);
+  if (val.length > 11) val = val.slice(0, 11);
+  let formatted = val;
+  if (val.length >= 4 && val.length <= 7) formatted = `${val.slice(0,3)}-${val.slice(3)}`;
+  else if (val.length >= 8) formatted = `${val.slice(0,3)}-${val.slice(3,7)}-${val.slice(7)}`;
+  this.value = formatted;
+});
+
+async function searchAttendee() {
+  clearAlert('alert-phone');
+  const phone = normalizePhone(document.getElementById('input-phone').value);
+
+  if (phone.length !== 11) {
+    showAlert('alert-phone', '연락처 11자리를 입력해 주세요.');
+    return;
+  }
+  if (!phone.startsWith('01')) {
+    showAlert('alert-phone', '휴대폰 번호 형식이 올바르지 않습니다.');
+    return;
+  }
+
+  state.phone = phone;
+  const btn = document.getElementById('btn-search');
+  btn.disabled = true;
+  btn.textContent = '조회 중...';
+
+  const res = await callApi('searchByPhone', { phone });
+
+  btn.disabled = false;
+  btn.textContent = '조회하기';
+
+  if (!res.success) {
+    showAlert('alert-phone', res.error || '조회 실패');
+    return;
+  }
+
+  if (res.found) {
+    // 사전신청자 발견
+    state.matches = res.matches;
+    if (res.matches.length === 1 && !res.matches[0].alreadyRegistered) {
+      // 1명이고 미등록이면 바로 다음 단계
+      selectMatch(0);
+    } else {
+      renderMatches();
+      showStep('select');
+    }
+  } else {
+    // 사전신청자 없음 → 현장 등록
+    document.getElementById('walkin-phone').value = formatPhone(phone);
+    showStep('walkin');
+  }
+}
+
+function renderMatches() {
+  const list = document.getElementById('match-list');
+  list.innerHTML = '';
+  state.matches.forEach((m, i) => {
+    const div = document.createElement('div');
+    div.className = 'match-item' + (m.alreadyRegistered ? ' disabled' : '');
+    div.onclick = () => { if (!m.alreadyRegistered) selectMatch(i); };
+    div.innerHTML = `
+      <div>
+        <div class="match-name">${escapeHtml(m.name)}</div>
+        <div class="match-school">${escapeHtml(m.school || '고교 미입력')}</div>
+      </div>
+      <div class="match-badge ${m.alreadyRegistered ? 'done' : ''}">
+        ${m.alreadyRegistered ? '등록완료' : '사전신청'}
+      </div>
+    `;
+    list.appendChild(div);
+  });
+}
+
+function selectMatch(idx) {
+  state.selected = state.matches[idx];
+  state.parking = null;
+  document.querySelectorAll('#step-pre-parking .toggle-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('btn-submit-pre').disabled = true;
+  document.getElementById('pre-info').innerHTML = `
+    <strong style="color: var(--gachon-navy-deep); font-size: 16px;">${escapeHtml(state.selected.name)}</strong> 님<br>
+    <span style="color: var(--ink-soft);">${escapeHtml(state.selected.school || '고교 미입력')} · ${maskPhone(state.selected.phone)}</span>
+  `;
+  showStep('pre-parking');
+}
+
+function setParking(val, type) {
+  state.parking = val;
+  const container = type === 'pre' ? '#step-pre-parking' : '#step-walkin';
+  document.querySelectorAll(`${container} .toggle-btn`).forEach(b => {
+    b.classList.toggle('active', parseInt(b.dataset.parking) === val);
+  });
+  if (type === 'pre') document.getElementById('btn-submit-pre').disabled = false;
+}
+
+async function submitPre() {
+  if (state.parking === null) return;
+  const btn = document.getElementById('btn-submit-pre');
+  btn.disabled = true;
+  btn.textContent = '등록 중...';
+
+  const res = await callApi('register', {
+    data: {
+      type: 'pre',
+      name: state.selected.name,
+      phone: state.selected.phone,
+      school: state.selected.school,
+      parking: state.parking === 1,
+      preRowIndex: state.selected.rowIndex
+    }
+  });
+
+  btn.disabled = false;
+  btn.textContent = '등록 완료';
+
+  if (!res.success) {
+    if (res.alreadyRegistered) {
+      showResult('pre', state.selected.name, state.selected.school, state.parking, res.registeredAt, true);
+    } else {
+      alert(res.error || '등록 실패');
+    }
+    return;
+  }
+  showResult('pre', state.selected.name, state.selected.school, state.parking, res.timestamp);
+}
+
+async function submitWalk() {
+  clearAlert('alert-walkin');
+  const name = document.getElementById('walkin-name').value.trim();
+  const school = document.getElementById('walkin-school').value.trim();
+
+  if (!name) { showAlert('alert-walkin', '성명을 입력해 주세요.'); return; }
+  if (!school) { showAlert('alert-walkin', '고교명을 입력해 주세요.'); return; }
+  if (state.parking === null) { showAlert('alert-walkin', '주차 여부를 선택해 주세요.'); return; }
+
+  const btn = document.getElementById('btn-submit-walk');
+  btn.disabled = true;
+  btn.textContent = '등록 중...';
+
+  const res = await callApi('register', {
+    data: {
+      type: 'walk',
+      name, school,
+      phone: state.phone,
+      parking: state.parking === 1
+    }
+  });
+
+  btn.disabled = false;
+  btn.textContent = '현장 등록';
+
+  if (!res.success) {
+    showAlert('alert-walkin', res.error || '등록 실패');
+    return;
+  }
+  showResult('walk', name, school, state.parking, res.timestamp);
+}
+
+function showResult(type, name, school, parking, timestamp, isDuplicate = false) {
+  document.getElementById('result-tag').className = 'result-tag ' + type;
+  document.getElementById('result-tag').textContent = type === 'pre' ? '사전 신청자' : '현장 등록자';
+  document.getElementById('result-icon').className = 'result-icon ' + type;
+  document.getElementById('result-icon').textContent = isDuplicate ? '!' : '✓';
+  document.getElementById('result-name').textContent = name;
+  document.getElementById('result-school').textContent = school;
+  document.getElementById('result-parking').textContent = parking === 1 ? '주차 함' : '주차 안 함';
+  document.getElementById('result-time').textContent = timestamp ? timestamp.split(' ')[1] || timestamp : '-';
+  showStep('done');
+}
+
+function reset() {
+  state = { phone: '', matches: [], selected: null, parking: null, mode: 'attendee', adminPw: state.adminPw, records: [] };
+  document.getElementById('input-phone').value = '';
+  document.getElementById('walkin-name').value = '';
+  document.getElementById('walkin-school').value = '';
+  document.getElementById('walkin-phone').value = '';
+  document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('btn-submit-pre').disabled = true;
+  showStep('phone');
+}
+
+function escapeHtml(s) {
+  return String(s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+
+// ==================== 관리자 페이지 ====================
+async function adminLogin() {
+  clearAlert('alert-login');
+  const pw = document.getElementById('admin-pw').value;
+  if (!pw) { showAlert('alert-login', '비밀번호를 입력해 주세요.'); return; }
+
+  state.adminPw = pw;
+  const result = await loadAdminData();
+  if (result) {
+    document.getElementById('admin-login').style.display = 'none';
+    document.getElementById('admin-content').style.display = 'block';
+    // 자동 새로고침 (30초)
+    setInterval(loadAdminData, 30000);
+  }
+}
+
+async function loadAdminData() {
+  const stats = await callApi('getStats', { password: state.adminPw });
+  if (!stats.success) {
+    showAlert('alert-login', stats.error || '인증 실패');
+    return false;
+  }
+  const records = await callApi('getAllRecords', { password: state.adminPw });
+  if (!records.success) {
+    showAlert('alert-login', records.error || '데이터 조회 실패');
+    return false;
+  }
+  state.records = records.records;
+  renderStats(stats.stats);
+  renderTable();
+  document.getElementById('admin-sub').textContent = '마지막 업데이트: ' + new Date().toLocaleTimeString('ko-KR');
+  return true;
+}
+
+function renderStats(s) {
+  const grid = document.getElementById('stat-grid');
+  grid.innerHTML = `
+    <div class="stat">
+      <div class="stat-label">사전 신청 출석</div>
+      <div class="stat-value">${s.preAttended}<span style="font-size:16px;color:var(--ink-mute);"> / ${s.preTotal}</span></div>
+      <div class="stat-sub">미출석 ${s.preNoShow}명</div>
+    </div>
+    <div class="stat gold">
+      <div class="stat-label">현장 등록</div>
+      <div class="stat-value">${s.walkIn}</div>
+      <div class="stat-sub">현장 신규 등록자</div>
+    </div>
+    <div class="stat total">
+      <div class="stat-label">총 출석</div>
+      <div class="stat-value">${s.total}</div>
+      <div class="stat-sub">사전 + 현장</div>
+    </div>
+    <div class="stat parking">
+      <div class="stat-label">주차 차량</div>
+      <div class="stat-value">${s.parking}</div>
+      <div class="stat-sub">주차 신청 차량 수</div>
+    </div>
+  `;
+}
+
+function renderTable() {
+  const tbody = document.getElementById('table-body');
+  const search = document.getElementById('search-input').value.toLowerCase();
+  let filtered = state.records;
+  if (search) {
+    filtered = filtered.filter(r =>
+      (r.name || '').toLowerCase().includes(search) ||
+      (r.school || '').toLowerCase().includes(search) ||
+      (r.phone || '').includes(search)
+    );
+  }
+
+  if (filtered.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;padding:40px;color:var(--ink-mute);">등록된 참석자가 없습니다.</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = filtered.map((r, i) => `
+    <tr>
+      <td>${i + 1}</td>
+      <td><span class="${r.type === '사전신청' ? 'tag-pre' : 'tag-walk'}">${escapeHtml(r.type)}</span></td>
+      <td style="color:var(--ink-mute);font-size:11px;">${escapeHtml(r.timestamp)}</td>
+      <td><strong>${escapeHtml(r.name)}</strong></td>
+      <td>${formatPhone(r.phone)}</td>
+      <td>${escapeHtml(r.school)}</td>
+      <td>${escapeHtml(r.parking)}</td>
+      <td style="color:var(--ink-mute);font-size:12px;">${escapeHtml(r.note)}</td>
+      <td><button class="icon-btn" onclick="openEdit(${r.rowIndex})">수정</button></td>
+    </tr>
+  `).join('');
+}
+
+function refreshAdmin() { loadAdminData(); }
+
+let editingRow = null;
+function openEdit(rowIndex) {
+  const r = state.records.find(x => x.rowIndex === rowIndex);
+  if (!r) return;
+  editingRow = rowIndex;
+  document.getElementById('edit-name').value = r.name;
+  document.getElementById('edit-school').value = r.school;
+  document.getElementById('edit-phone').value = formatPhone(r.phone);
+  document.getElementById('edit-parking').value = r.parking || '미주차';
+  document.getElementById('edit-note').value = r.note || '';
+  clearAlert('alert-edit');
+  document.getElementById('modal-edit').classList.add('show');
+}
+function closeEdit() {
+  document.getElementById('modal-edit').classList.remove('show');
+  editingRow = null;
+}
+async function saveEdit() {
+  if (!editingRow) return;
+  const data = {
+    rowIndex: editingRow,
+    name: document.getElementById('edit-name').value.trim(),
+    phone: normalizePhone(document.getElementById('edit-phone').value),
+    school: document.getElementById('edit-school').value.trim(),
+    parking: document.getElementById('edit-parking').value,
+    note: document.getElementById('edit-note').value.trim()
+  };
+  if (!data.name) { showAlert('alert-edit', '성명은 필수입니다.'); return; }
+
+  const res = await callApi('updateRecord', { data, password: state.adminPw });
+  if (!res.success) {
+    showAlert('alert-edit', res.error || '수정 실패');
+    return;
+  }
+  closeEdit();
+  loadAdminData();
+}
+
+// 엑셀 다운로드 (CSV로)
+function exportExcel() {
+  if (state.records.length === 0) {
+    alert('다운로드할 데이터가 없습니다.');
+    return;
+  }
+  const headers = ['번호', '구분', '등록시각', '성명', '연락처', '고교명', '주차여부', '비고'];
+  const rows = state.records.map((r, i) => [
+    i + 1, r.type, r.timestamp, r.name, formatPhone(r.phone), r.school, r.parking, r.note
+  ]);
+  const csv = '\uFEFF' + [headers, ...rows].map(row =>
+    row.map(cell => `"${String(cell || '').replace(/"/g, '""')}"`).join(',')
+  ).join('\n');
+
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  const today = new Date().toISOString().split('T')[0];
+  a.download = `출석등록명단_${today}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// 초기화
+checkMode();
+</script>
+
+</body>
+</html>
