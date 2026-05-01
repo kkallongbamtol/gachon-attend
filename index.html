@@ -591,6 +591,458 @@
     from { opacity: 0; transform: translateY(8px); }
     to { opacity: 1; transform: translateY(0); }
   }
+
+  /* ============ 풀배경 결과화면 (혼잡 상황 시인성) ============ */
+  body.done-pre {
+    background: var(--gachon-navy) !important;
+  }
+  body.done-walk {
+    background: var(--gachon-gold) !important;
+  }
+  body.done-pre .header,
+  body.done-walk .header,
+  body.done-pre .footer,
+  body.done-walk .footer,
+  body.done-pre .mode-switch,
+  body.done-walk .mode-switch { display: none; }
+
+  body.done-pre #app-attendee,
+  body.done-walk #app-attendee {
+    padding: 0;
+    max-width: 100%;
+    min-height: 100vh;
+  }
+
+  body.done-pre #step-done,
+  body.done-walk #step-done {
+    background: transparent;
+    border: none;
+    margin: 0;
+    padding: 32px 24px;
+    min-height: 100vh;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+  }
+  body.done-pre #step-done .card-corner,
+  body.done-walk #step-done .card-corner { display: none; }
+
+  .result-fullscreen {
+    width: 100%;
+    max-width: 480px;
+    text-align: center;
+    color: white;
+  }
+  body.done-walk .result-fullscreen { color: var(--gachon-navy-deep); }
+
+  .result-fullscreen .big-label {
+    font-family: 'Gowun Batang', serif;
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: 0.4em;
+    padding: 14px 28px;
+    border: 2px solid currentColor;
+    display: inline-block;
+    margin-bottom: 32px;
+  }
+  body.done-walk .result-fullscreen .big-label {
+    background: var(--gachon-navy-deep);
+    color: white;
+    border-color: var(--gachon-navy-deep);
+  }
+
+  .result-fullscreen .big-name {
+    font-family: 'Gowun Batang', serif;
+    font-size: 56px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 12px;
+    line-height: 1.1;
+  }
+  .result-fullscreen .big-school {
+    font-size: 18px;
+    margin-bottom: 28px;
+    opacity: 0.85;
+  }
+  .result-fullscreen .big-info {
+    border-top: 1px solid currentColor;
+    border-bottom: 1px solid currentColor;
+    padding: 20px 0;
+    margin: 28px 0;
+    display: flex;
+    justify-content: center;
+    gap: 48px;
+    font-size: 15px;
+    opacity: 0.95;
+  }
+  .result-fullscreen .big-info-label {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    margin-bottom: 4px;
+    opacity: 0.7;
+  }
+  .result-fullscreen .big-info-value {
+    font-weight: 700;
+    font-size: 18px;
+  }
+  .result-fullscreen .help-text {
+    margin-top: 36px;
+    padding: 14px 18px;
+    border: 1px solid currentColor;
+    font-size: 13.5px;
+    line-height: 1.5;
+    opacity: 0.95;
+    border-radius: 3px;
+  }
+  .result-fullscreen .next-btn {
+    margin-top: 24px;
+    background: transparent;
+    color: currentColor;
+    border: 1.5px solid currentColor;
+    padding: 14px 24px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    border-radius: 3px;
+    width: 100%;
+  }
+  .result-fullscreen .next-btn:hover {
+    background: currentColor;
+    color: var(--gachon-navy);
+  }
+  body.done-walk .result-fullscreen .next-btn:hover {
+    background: var(--gachon-navy-deep);
+    color: white;
+  }
+
+  /* 다인 결과 카드 (작은 카드 여러 개 나열) */
+  .multi-result-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 20px 0;
+  }
+  .multi-result-item {
+    border: 1px solid currentColor;
+    padding: 14px 18px;
+    text-align: left;
+    border-radius: 3px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+  }
+  .multi-result-item.failed { opacity: 0.5; }
+  .multi-result-item-name {
+    font-family: 'Gowun Batang', serif;
+    font-size: 22px;
+    font-weight: 700;
+  }
+  .multi-result-item-sub {
+    font-size: 12px;
+    opacity: 0.85;
+    margin-top: 2px;
+  }
+  .multi-result-item-status {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    padding: 4px 10px;
+    border: 1px solid currentColor;
+    white-space: nowrap;
+    border-radius: 2px;
+  }
+
+  /* 등록 진행 중 표시 (다인 등록 시) */
+  .progress-bar {
+    width: 100%;
+    height: 6px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 3px;
+    overflow: hidden;
+    margin: 16px 0;
+  }
+  body.done-walk .progress-bar { background: rgba(0,0,0,0.15); }
+  .progress-bar-fill {
+    height: 100%;
+    background: currentColor;
+    transition: width 0.3s ease;
+  }
+
+  /* ============ 체크박스 매치 아이템 (다인 선택) ============ */
+  .match-item .match-checkbox {
+    width: 24px;
+    height: 24px;
+    border: 2px solid var(--line);
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    background: white;
+    transition: all 0.15s;
+  }
+  .match-item.checked .match-checkbox {
+    background: var(--gachon-navy);
+    border-color: var(--gachon-navy);
+    color: white;
+  }
+  .match-item.checked .match-checkbox::after {
+    content: '✓';
+    font-size: 14px;
+    font-weight: 700;
+  }
+  .match-item.checked {
+    border-color: var(--gachon-navy);
+    background: #f0f4f9;
+  }
+  .match-item-content {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .select-actions {
+    margin-top: 18px;
+    display: flex;
+    gap: 8px;
+  }
+  .select-actions .btn { flex: 1; }
+  .select-info {
+    background: #f0f4f9;
+    padding: 10px 12px;
+    border-radius: 3px;
+    margin-bottom: 14px;
+    font-size: 12.5px;
+    color: var(--gachon-navy-deep);
+    line-height: 1.5;
+  }
+
+  /* ============ 다인 주차 입력 ============ */
+  .parking-mode-toggle {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 16px;
+    background: #faf8f3;
+    padding: 4px;
+    border-radius: 3px;
+  }
+  .parking-mode-toggle button {
+    flex: 1;
+    padding: 8px 12px;
+    border: none;
+    background: transparent;
+    font-family: inherit;
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    cursor: pointer;
+    border-radius: 2px;
+    font-weight: 600;
+  }
+  .parking-mode-toggle button.active {
+    background: var(--gachon-navy);
+    color: white;
+  }
+  .individual-parking {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .individual-parking-row {
+    border: 1px solid var(--line);
+    padding: 12px 14px;
+    border-radius: 3px;
+    background: white;
+  }
+  .individual-parking-name {
+    font-weight: 700;
+    color: var(--gachon-navy-deep);
+    margin-bottom: 8px;
+    font-size: 14px;
+  }
+
+  /* ============ 관리자: 삭제 버튼 ============ */
+  .icon-btn.danger {
+    color: var(--error);
+    border-color: #f0c4c0;
+  }
+  .icon-btn.danger:hover {
+    background: var(--error);
+    color: white;
+    border-color: var(--error);
+  }
+  .action-btns {
+    display: flex;
+    gap: 4px;
+    flex-wrap: nowrap;
+  }
+
+  /* 삭제 확인 모달 */
+  .modal.danger h3 { color: var(--error); }
+  .modal-warning {
+    background: #fff0ee;
+    border-left: 3px solid var(--error);
+    padding: 12px 14px;
+    margin-bottom: 16px;
+    font-size: 13px;
+    line-height: 1.5;
+    color: #8b1c12;
+  }
+  .modal-target-info {
+    background: #faf8f3;
+    padding: 12px 14px;
+    border-radius: 3px;
+    margin-bottom: 16px;
+    font-size: 13px;
+  }
+  .modal-target-info strong {
+    color: var(--gachon-navy-deep);
+    font-size: 15px;
+  }
+
+  /* ============ 검정고시 체크박스 ============ */
+  .ged-checkbox {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+    padding: 6px 0;
+    cursor: pointer;
+    font-size: 13px;
+    color: var(--ink-soft);
+    user-select: none;
+  }
+  .ged-checkbox input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--gachon-navy);
+    cursor: pointer;
+  }
+  .input.ged-disabled {
+    background: #faf8f3;
+    color: var(--ink-mute);
+    cursor: not-allowed;
+  }
+
+  /* ============ 등록 카드 보기 버튼 (재조회) ============ */
+  .match-item .view-card-btn {
+    background: transparent;
+    border: 1px solid var(--gachon-navy);
+    color: var(--gachon-navy);
+    padding: 6px 10px;
+    border-radius: 2px;
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    margin-left: 8px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .match-item .view-card-btn:hover {
+    background: var(--gachon-navy);
+    color: white;
+  }
+
+  /* ============ 시간대별 누적 출석 차트 ============ */
+  .chart-card {
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    padding: 18px 22px;
+    margin-bottom: 28px;
+  }
+  .chart-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 12px;
+  }
+  .chart-card-title {
+    font-family: 'Gowun Batang', serif;
+    font-size: 16px;
+    color: var(--gachon-navy-deep);
+  }
+  .chart-card-meta {
+    font-size: 11px;
+    color: var(--ink-mute);
+    letter-spacing: 0.05em;
+  }
+  .chart-svg-wrap {
+    width: 100%;
+    overflow-x: auto;
+  }
+  .chart-svg {
+    display: block;
+    width: 100%;
+    min-width: 400px;
+    height: 180px;
+  }
+  .chart-svg .grid-line {
+    stroke: #f0ece3;
+    stroke-width: 1;
+  }
+  .chart-svg .axis-line {
+    stroke: var(--line);
+    stroke-width: 1;
+  }
+  .chart-svg .axis-text {
+    fill: var(--ink-mute);
+    font-size: 10px;
+    font-family: 'IBM Plex Sans KR', sans-serif;
+  }
+  .chart-svg .line-pre {
+    fill: none;
+    stroke: var(--gachon-navy);
+    stroke-width: 2;
+  }
+  .chart-svg .line-walk {
+    fill: none;
+    stroke: var(--gachon-gold);
+    stroke-width: 2;
+  }
+  .chart-svg .line-total {
+    fill: none;
+    stroke: var(--gachon-navy-deep);
+    stroke-width: 2.5;
+  }
+  .chart-svg .area-total {
+    fill: var(--gachon-navy);
+    opacity: 0.06;
+  }
+  .chart-legend {
+    display: flex;
+    gap: 18px;
+    margin-top: 10px;
+    font-size: 11px;
+    color: var(--ink-soft);
+    flex-wrap: wrap;
+  }
+  .chart-legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .chart-legend-swatch {
+    display: inline-block;
+    width: 16px;
+    height: 2.5px;
+  }
+  .chart-empty {
+    text-align: center;
+    padding: 30px;
+    color: var(--ink-mute);
+    font-size: 13px;
+  }
+
+  @media (max-width: 600px) {
+    .result-fullscreen .big-name { font-size: 42px; }
+    .result-fullscreen .big-label { font-size: 24px; letter-spacing: 0.3em; }
+    .result-fullscreen .big-info { gap: 24px; }
+  }
 </style>
 </head>
 <body>
@@ -624,35 +1076,50 @@
     <button class="btn" id="btn-search" onclick="searchAttendee()">조회하기</button>
   </section>
 
-  <!-- STEP 2: 신청자 선택 (동일 번호로 여러 명) -->
+  <!-- STEP 2: 신청자 선택 (동일 번호로 여러 명) - 체크박스 다중 선택 -->
   <section class="card fade-in" id="step-select" style="display:none;">
     <div class="card-corner"></div>
     <div class="step-label">STEP 02</div>
-    <h2 class="step-title">본인 선택</h2>
-    <p class="step-desc">조회된 사전신청자 목록입니다. 본인을 선택해 주세요.</p>
+    <h2 class="step-title">본인/일행 선택</h2>
+    <p class="step-desc" id="select-desc">조회된 사전신청자 목록입니다. 본인 또는 함께 등록할 일행을 선택해 주세요.</p>
+
+    <div class="select-info" id="select-info">
+      함께 등록할 분만 체크해 주세요. 잘못 매칭된 분은 체크하지 않으면 됩니다.
+    </div>
 
     <div class="match-list" id="match-list"></div>
 
-    <div style="margin-top: 18px;">
+    <div class="select-actions">
       <button class="btn ghost" onclick="goBack('phone')">← 다시 조회</button>
+      <button class="btn" id="btn-select-next" onclick="proceedToParking()" disabled>선택한 0명 등록 →</button>
     </div>
   </section>
 
-  <!-- STEP 3: 사전신청자 - 주차 입력 -->
+  <!-- STEP 3: 사전신청자 - 주차 입력 (일괄/개별) -->
   <section class="card fade-in" id="step-pre-parking" style="display:none;">
     <div class="card-corner"></div>
     <div class="step-label">STEP 03</div>
     <h2 class="step-title">주차 여부</h2>
     <p class="step-desc">차량을 가지고 오셨나요?</p>
 
-    <div id="pre-info" style="background: #f0f4f9; padding: 14px; border-radius: 3px; margin-bottom: 20px; font-size: 13px;"></div>
+    <div id="pre-info" style="background: #f0f4f9; padding: 14px; border-radius: 3px; margin-bottom: 16px; font-size: 13px;"></div>
 
-    <div class="field">
+    <!-- 일괄/개별 모드 토글 (2명 이상일 때만 표시) -->
+    <div class="parking-mode-toggle" id="parking-mode-toggle" style="display:none;">
+      <button id="parking-mode-bulk" class="active" onclick="setParkingMode('bulk')">전체 일괄</button>
+      <button id="parking-mode-individual" onclick="setParkingMode('individual')">개별 입력</button>
+    </div>
+
+    <!-- 일괄 입력 -->
+    <div class="field" id="parking-bulk-field">
       <div class="toggle-group">
         <button class="toggle-btn" data-parking="0" onclick="setParking(0, 'pre')">주차 안 함</button>
         <button class="toggle-btn" data-parking="1" onclick="setParking(1, 'pre')">주차 함</button>
       </div>
     </div>
+
+    <!-- 개별 입력 (각 인원별) -->
+    <div class="individual-parking" id="parking-individual-field" style="display:none;"></div>
 
     <div class="btn-row">
       <button class="btn ghost" onclick="goBack('select')">← 이전</button>
@@ -675,8 +1142,12 @@
     </div>
 
     <div class="field">
-      <label class="field-label">고교명 <span class="req">*</span></label>
+      <label class="field-label">고교명</label>
       <input type="text" class="input" id="walkin-school" placeholder="가천고등학교">
+      <label class="ged-checkbox">
+        <input type="checkbox" id="walkin-ged" onchange="toggleGed(this.checked)">
+        <span>검정고시 (해당 없음)</span>
+      </label>
     </div>
 
     <div class="field">
@@ -698,32 +1169,42 @@
     </div>
   </section>
 
-  <!-- STEP 완료: 결과 -->
+  <!-- STEP 완료: 결과 (풀배경 + 큰 라벨) -->
   <section class="card fade-in" id="step-done" style="display:none;">
-    <div class="card-corner"></div>
-    <div class="result">
-      <div class="result-tag" id="result-tag"></div>
-      <div class="result-icon" id="result-icon">✓</div>
-      <div class="result-name" id="result-name"></div>
-      <div class="result-school" id="result-school"></div>
+    <div class="result-fullscreen">
+      <div class="big-label" id="result-big-label">사전 신청</div>
 
-      <div class="result-info">
-        <div>
-          <div class="result-info-label">주차</div>
-          <div class="result-info-value" id="result-parking"></div>
-        </div>
-        <div>
-          <div class="result-info-label">등록 시각</div>
-          <div class="result-info-value" id="result-time"></div>
+      <!-- 단일 등록 표시 -->
+      <div id="result-single">
+        <div class="big-name" id="result-name"></div>
+        <div class="big-school" id="result-school"></div>
+        <div class="big-info">
+          <div>
+            <div class="big-info-label">주차</div>
+            <div class="big-info-value" id="result-parking"></div>
+          </div>
+          <div>
+            <div class="big-info-label">등록 시각</div>
+            <div class="big-info-value" id="result-time"></div>
+          </div>
         </div>
       </div>
 
-      <p style="font-size: 13px; color: var(--ink-soft); line-height: 1.6;">
-        등록이 완료되었습니다.<br>
-        설명회장 입장 시 진행요원 안내에 따라주시기 바랍니다.
-      </p>
+      <!-- 다인 등록 표시 -->
+      <div id="result-multi" style="display:none;">
+        <div style="font-size: 14px; margin-bottom: 12px; opacity: 0.85;">
+          총 <strong id="result-multi-count">0</strong>명 등록 완료
+        </div>
+        <div class="multi-result-list" id="result-multi-list"></div>
+      </div>
+
+      <div class="help-text">
+        등록이 완료되었습니다. 설명회장 입장 시 진행요원 안내에 따라주세요.<br>
+        <strong>본인이 아니거나 잘못 입력하셨다면 관계자에게 말씀해 주세요.</strong>
+      </div>
+
+      <button class="next-btn" onclick="reset()">다음 참석자 →</button>
     </div>
-    <button class="btn ghost" style="margin-top: 16px;" onclick="reset()">다음 참석자</button>
   </section>
 
   <footer class="footer">
@@ -760,6 +1241,31 @@
   <div id="admin-content" style="display:none;">
     <div class="admin-grid" id="stat-grid"></div>
 
+    <!-- 시간대별 누적 출석 차트 -->
+    <div class="chart-card">
+      <div class="chart-card-header">
+        <div class="chart-card-title">시간대별 누적 출석</div>
+        <div class="chart-card-meta" id="chart-meta">10분 단위</div>
+      </div>
+      <div class="chart-svg-wrap">
+        <div id="chart-area"></div>
+      </div>
+      <div class="chart-legend">
+        <div class="chart-legend-item">
+          <span class="chart-legend-swatch" style="background:var(--gachon-navy-deep);"></span>
+          <span>총 출석 (누적)</span>
+        </div>
+        <div class="chart-legend-item">
+          <span class="chart-legend-swatch" style="background:var(--gachon-navy);"></span>
+          <span>사전 신청</span>
+        </div>
+        <div class="chart-legend-item">
+          <span class="chart-legend-swatch" style="background:var(--gachon-gold);"></span>
+          <span>현장 등록</span>
+        </div>
+      </div>
+    </div>
+
     <div class="table-wrap">
       <div class="table-head">
         <h2>등록 명단</h2>
@@ -781,7 +1287,7 @@
               <th>고교명</th>
               <th>주차</th>
               <th>비고</th>
-              <th>수정</th>
+              <th>관리</th>
             </tr>
           </thead>
           <tbody id="table-body"></tbody>
@@ -832,6 +1338,40 @@
 </div>
 
 
+<!-- ===================== 모달 (삭제 확인) ===================== -->
+<div class="modal-bg" id="modal-delete">
+  <div class="modal danger">
+    <h3>등록 삭제</h3>
+    <div id="alert-delete"></div>
+    <div class="modal-warning">
+      삭제하면 복구할 수 없습니다.<br>
+      사전 신청자였다면 다시 등록할 수 있도록 자동으로 처리됩니다.
+    </div>
+    <div class="modal-target-info" id="delete-target-info"></div>
+
+    <div id="delete-step-1">
+      <p style="font-size: 13.5px; color: var(--ink-soft); margin-bottom: 16px;">
+        위 등록 정보를 삭제하시겠습니까?
+      </p>
+      <div class="btn-row">
+        <button class="btn ghost" onclick="closeDelete()">취소</button>
+        <button class="btn danger" onclick="confirmDeleteStep1()">삭제하기</button>
+      </div>
+    </div>
+
+    <div id="delete-step-2" style="display:none;">
+      <p style="font-size: 13.5px; color: var(--error); font-weight: 600; margin-bottom: 16px;">
+        정말 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.
+      </p>
+      <div class="btn-row">
+        <button class="btn ghost" onclick="closeDelete()">취소</button>
+        <button class="btn danger" id="btn-delete-final" onclick="executeDelete()">예, 삭제합니다</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 <!-- ===================== 모드 전환 링크 ===================== -->
 <div class="mode-switch">
   <a href="#" id="mode-link" onclick="toggleMode(); return false;">관리자 보기</a>
@@ -849,10 +1389,13 @@ const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbycx-I0so2t_KDYjq5q_
 // ==================== 상태 관리 ====================
 let state = {
   phone: '',
-  matches: [],
-  selected: null,        // 선택된 사전신청자
-  parking: null,         // 0 또는 1
-  mode: 'attendee',      // 'attendee' or 'admin'
+  matches: [],            // 검색된 사전신청자 후보
+  selectedIndices: [],    // 체크된 사전신청자 인덱스 배열
+  parkingMode: 'bulk',    // 'bulk' | 'individual'
+  parkingBulk: null,      // 일괄 모드 시 0 또는 1
+  parkingIndividual: {},  // 개별 모드 시 {rowIndex: 0|1}
+  parking: null,          // 현장등록용 0 또는 1
+  mode: 'attendee',
   adminPw: '',
   records: []
 };
@@ -976,102 +1519,298 @@ async function searchAttendee() {
   }
 
   if (res.found) {
-    // 사전신청자 발견
+    // 사전신청자 또는 현장등록자(재조회) 발견
     state.matches = res.matches;
-    if (res.matches.length === 1 && !res.matches[0].alreadyRegistered) {
-      // 1명이고 미등록이면 바로 다음 단계
-      selectMatch(0);
+    const availableCount = res.matches.filter(m => !m.alreadyRegistered).length;
+
+    if (availableCount === 0) {
+      // 전부 이미 등록된 상태 - 재조회 화면 (등록 카드 보기 버튼 노출)
+      renderMatches();
+      showStep('select');
+      return;
+    }
+
+    if (res.matches.length === 1 && availableCount === 1) {
+      // 1명이고 미등록 — 자동으로 체크하고 다음 단계
+      state.selectedIndices = [0];
+      proceedToParking();
     } else {
+      // 다인 또는 1명+이미등록 케이스 — 체크박스 화면 노출
       renderMatches();
       showStep('select');
     }
   } else {
-    // 사전신청자 없음 → 현장 등록
+    // 사전신청자도 등록현황도 없음 → 현장 등록
     document.getElementById('walkin-phone').value = formatPhone(phone);
     showStep('walkin');
   }
 }
 
 function renderMatches() {
+  state.selectedIndices = [];
   const list = document.getElementById('match-list');
   list.innerHTML = '';
+  const total = state.matches.length;
+  const available = state.matches.filter(m => !m.alreadyRegistered).length;
+  const registered = total - available;
+
+  // 안내 문구를 상황에 맞게
+  const desc = document.getElementById('select-desc');
+  const info = document.getElementById('select-info');
+
+  if (available === 0) {
+    // 모두 이미 등록 - 재조회 케이스
+    if (total === 1) {
+      desc.textContent = '이미 등록 완료된 분입니다.';
+    } else {
+      desc.textContent = `이미 등록된 ${total}명이 조회되었습니다.`;
+    }
+    info.style.display = 'block';
+    info.innerHTML = '등록된 카드를 다시 보시려면 <strong>[등록 카드 보기]</strong>를 눌러주세요.';
+  } else if (total === 1) {
+    desc.textContent = '조회된 사전신청자입니다. 본인이 맞는지 확인해 주세요.';
+    info.style.display = 'none';
+  } else if (registered > 0) {
+    // 일부 등록 + 일부 미등록 (혼합 케이스)
+    desc.textContent = `같은 연락처로 ${total}명이 조회되었습니다. (등록완료 ${registered}명 / 미등록 ${available}명)`;
+    info.style.display = 'block';
+    info.innerHTML = '미등록자를 추가 등록하시거나, 등록완료자의 <strong>[등록 카드 보기]</strong>를 누르세요.';
+  } else {
+    desc.textContent = `같은 연락처로 ${total}명이 사전신청되어 있습니다. 함께 등록할 분을 모두 선택해 주세요.`;
+    info.style.display = 'block';
+    info.innerHTML = '체크된 분만 등록됩니다. 본인 또는 함께 오신 일행만 선택해 주세요.';
+  }
+
   state.matches.forEach((m, i) => {
     const div = document.createElement('div');
     div.className = 'match-item' + (m.alreadyRegistered ? ' disabled' : '');
-    div.onclick = () => { if (!m.alreadyRegistered) selectMatch(i); };
+    div.dataset.idx = i;
+    if (!m.alreadyRegistered) {
+      div.onclick = () => toggleMatch(i);
+    }
+
+    const isWalkIn = m.type === 'walk';
+    const badgeLabel = m.alreadyRegistered
+      ? (isWalkIn ? '현장등록' : '등록완료')
+      : '사전신청';
+    const badgeClass = m.alreadyRegistered ? 'done' : '';
+
+    // 등록완료자에게 [등록 카드 보기] 버튼 추가
+    const viewCardBtn = m.alreadyRegistered
+      ? `<button class="view-card-btn" onclick="event.stopPropagation(); viewRegisteredCard(${i});">등록 카드 보기</button>`
+      : '';
+
     div.innerHTML = `
-      <div>
+      ${m.alreadyRegistered ? '' : '<div class="match-checkbox"></div>'}
+      <div class="match-item-content">
         <div class="match-name">${escapeHtml(m.name)}</div>
         <div class="match-school">${escapeHtml(m.school || '고교 미입력')}</div>
       </div>
-      <div class="match-badge ${m.alreadyRegistered ? 'done' : ''}">
-        ${m.alreadyRegistered ? '등록완료' : '사전신청'}
-      </div>
+      <div class="match-badge ${badgeClass}">${badgeLabel}</div>
+      ${viewCardBtn}
     `;
     list.appendChild(div);
   });
+
+  updateSelectButton();
 }
 
-function selectMatch(idx) {
-  state.selected = state.matches[idx];
-  state.parking = null;
+// 등록 카드 보기 (재조회) - 풀배경 결과 화면 재현
+function viewRegisteredCard(idx) {
+  const m = state.matches[idx];
+  if (!m || !m.alreadyRegistered) return;
+
+  // 시트에서 받아온 등록 정보로 결과 카드 표시
+  const parking = m.parking === '주차' ? 1 : 0;
+  const type = m.type === 'walk' ? 'walk' : 'pre';
+
+  showMultiResult(type, [{
+    name: m.name,
+    school: m.school || '고교 미입력',
+    parking: parking,
+    success: true,
+    timestamp: m.registeredAt
+  }]);
+}
+
+function toggleMatch(idx) {
+  const pos = state.selectedIndices.indexOf(idx);
+  if (pos >= 0) {
+    state.selectedIndices.splice(pos, 1);
+  } else {
+    state.selectedIndices.push(idx);
+  }
+  // UI 업데이트
+  const item = document.querySelector(`.match-item[data-idx="${idx}"]`);
+  if (item) item.classList.toggle('checked', state.selectedIndices.includes(idx));
+  updateSelectButton();
+}
+
+function updateSelectButton() {
+  const btn = document.getElementById('btn-select-next');
+  const n = state.selectedIndices.length;
+  btn.textContent = `선택한 ${n}명 등록 →`;
+  btn.disabled = n === 0;
+}
+
+function proceedToParking() {
+  if (state.selectedIndices.length === 0) return;
+
+  // 주차 입력 상태 초기화
+  state.parkingMode = 'bulk';
+  state.parkingBulk = null;
+  state.parkingIndividual = {};
+
+  // 선택된 인원 정보 표시
+  const selected = state.selectedIndices.map(i => state.matches[i]);
+  const names = selected.map(s => s.name).join(', ');
+  document.getElementById('pre-info').innerHTML = `
+    <strong style="color: var(--gachon-navy-deep); font-size: 16px;">${escapeHtml(names)}</strong>
+    <span style="color: var(--ink-soft);"> · 총 ${selected.length}명</span><br>
+    <span style="color: var(--ink-soft); font-size: 12px;">${maskPhone(state.phone)}</span>
+  `;
+
+  // 모드 토글 표시 여부 (2명 이상일 때만)
+  const modeToggle = document.getElementById('parking-mode-toggle');
+  modeToggle.style.display = selected.length >= 2 ? 'flex' : 'none';
+
+  // 일괄 모드로 시작
+  setParkingMode('bulk');
   document.querySelectorAll('#step-pre-parking .toggle-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('btn-submit-pre').disabled = true;
-  document.getElementById('pre-info').innerHTML = `
-    <strong style="color: var(--gachon-navy-deep); font-size: 16px;">${escapeHtml(state.selected.name)}</strong> 님<br>
-    <span style="color: var(--ink-soft);">${escapeHtml(state.selected.school || '고교 미입력')} · ${maskPhone(state.selected.phone)}</span>
-  `;
+
   showStep('pre-parking');
 }
 
-function setParking(val, type) {
-  state.parking = val;
-  const container = type === 'pre' ? '#step-pre-parking' : '#step-walkin';
-  document.querySelectorAll(`${container} .toggle-btn`).forEach(b => {
-    b.classList.toggle('active', parseInt(b.dataset.parking) === val);
+function setParkingMode(mode) {
+  state.parkingMode = mode;
+  document.getElementById('parking-mode-bulk').classList.toggle('active', mode === 'bulk');
+  document.getElementById('parking-mode-individual').classList.toggle('active', mode === 'individual');
+  document.getElementById('parking-bulk-field').style.display = mode === 'bulk' ? 'block' : 'none';
+  document.getElementById('parking-individual-field').style.display = mode === 'individual' ? 'flex' : 'none';
+
+  if (mode === 'individual') {
+    renderIndividualParking();
+  }
+  validateParkingInput();
+}
+
+function renderIndividualParking() {
+  const container = document.getElementById('parking-individual-field');
+  container.innerHTML = '';
+  state.selectedIndices.forEach(idx => {
+    const m = state.matches[idx];
+    const row = document.createElement('div');
+    row.className = 'individual-parking-row';
+    row.innerHTML = `
+      <div class="individual-parking-name">${escapeHtml(m.name)} <span style="color:var(--ink-mute);font-weight:normal;font-size:12px;">${escapeHtml(m.school || '')}</span></div>
+      <div class="toggle-group">
+        <button class="toggle-btn ${state.parkingIndividual[idx] === 0 ? 'active' : ''}" onclick="setIndividualParking(${idx}, 0)">주차 안 함</button>
+        <button class="toggle-btn ${state.parkingIndividual[idx] === 1 ? 'active' : ''}" onclick="setIndividualParking(${idx}, 1)">주차 함</button>
+      </div>
+    `;
+    container.appendChild(row);
   });
-  if (type === 'pre') document.getElementById('btn-submit-pre').disabled = false;
+}
+
+function setIndividualParking(idx, val) {
+  state.parkingIndividual[idx] = val;
+  renderIndividualParking();
+  validateParkingInput();
+}
+
+function setParking(val, type) {
+  if (type === 'pre') {
+    state.parkingBulk = val;
+    document.querySelectorAll('#parking-bulk-field .toggle-btn').forEach(b => {
+      b.classList.toggle('active', parseInt(b.dataset.parking) === val);
+    });
+    validateParkingInput();
+  } else {
+    // 현장등록용
+    state.parking = val;
+    document.querySelectorAll('#step-walkin .toggle-btn').forEach(b => {
+      b.classList.toggle('active', parseInt(b.dataset.parking) === val);
+    });
+  }
+}
+
+function validateParkingInput() {
+  const btn = document.getElementById('btn-submit-pre');
+  if (state.parkingMode === 'bulk') {
+    btn.disabled = state.parkingBulk === null;
+  } else {
+    // 모든 선택자에 대해 개별 입력이 되었는지 확인
+    const allSet = state.selectedIndices.every(idx => state.parkingIndividual[idx] !== undefined);
+    btn.disabled = !allSet;
+  }
 }
 
 async function submitPre() {
-  if (state.parking === null) return;
   const btn = document.getElementById('btn-submit-pre');
   btn.disabled = true;
-  btn.textContent = '등록 중...';
 
-  const res = await callApi('register', {
-    data: {
-      type: 'pre',
-      name: state.selected.name,
-      phone: state.selected.phone,
-      school: state.selected.school,
-      parking: state.parking === 1,
-      preRowIndex: state.selected.rowIndex
-    }
-  });
+  const selected = state.selectedIndices.map(i => state.matches[i]);
+  const total = selected.length;
+
+  // 등록 결과 수집
+  const results = [];
+
+  for (let i = 0; i < selected.length; i++) {
+    const m = selected[i];
+    btn.textContent = `등록 중... (${i + 1}/${total})`;
+
+    const parkingVal = state.parkingMode === 'bulk'
+      ? state.parkingBulk
+      : state.parkingIndividual[state.selectedIndices[i]];
+
+    const res = await callApi('register', {
+      data: {
+        type: 'pre',
+        name: m.name,
+        phone: m.phone,
+        school: m.school,
+        parking: parkingVal === 1,
+        preRowIndex: m.rowIndex
+      }
+    });
+
+    results.push({
+      name: m.name,
+      school: m.school,
+      parking: parkingVal,
+      success: res.success,
+      timestamp: res.timestamp,
+      error: res.error,
+      alreadyRegistered: res.alreadyRegistered
+    });
+  }
 
   btn.disabled = false;
   btn.textContent = '등록 완료';
 
-  if (!res.success) {
-    if (res.alreadyRegistered) {
-      showResult('pre', state.selected.name, state.selected.school, state.parking, res.registeredAt, true);
-    } else {
-      alert(res.error || '등록 실패');
-    }
-    return;
-  }
-  showResult('pre', state.selected.name, state.selected.school, state.parking, res.timestamp);
+  showMultiResult('pre', results);
 }
 
 async function submitWalk() {
   clearAlert('alert-walkin');
   const name = document.getElementById('walkin-name').value.trim();
-  const school = document.getElementById('walkin-school').value.trim();
+  const isGed = document.getElementById('walkin-ged').checked;
+  let school = document.getElementById('walkin-school').value.trim();
+
+  // 검정고시 체크 시 고교명을 "검정고시"로 자동 설정
+  if (isGed) {
+    school = '검정고시';
+  }
 
   if (!name) { showAlert('alert-walkin', '성명을 입력해 주세요.'); return; }
-  if (!school) { showAlert('alert-walkin', '고교명을 입력해 주세요.'); return; }
   if (state.parking === null) { showAlert('alert-walkin', '주차 여부를 선택해 주세요.'); return; }
+
+  // 고교명 빈칸 + 검정고시 미체크 → 확인 다이얼로그
+  if (!school) {
+    const ok = confirm('고교명을 입력하지 않았습니다.\n그대로 등록할까요?\n\n* 검정고시 응시생이면 [검정고시] 체크박스를 선택해 주세요.');
+    if (!ok) return;
+  }
 
   const btn = document.getElementById('btn-submit-walk');
   btn.disabled = true;
@@ -1093,27 +1832,115 @@ async function submitWalk() {
     showAlert('alert-walkin', res.error || '등록 실패');
     return;
   }
-  showResult('walk', name, school, state.parking, res.timestamp);
+  showMultiResult('walk', [{
+    name, school, parking: state.parking, success: true, timestamp: res.timestamp
+  }]);
 }
 
-function showResult(type, name, school, parking, timestamp, isDuplicate = false) {
-  document.getElementById('result-tag').className = 'result-tag ' + type;
-  document.getElementById('result-tag').textContent = type === 'pre' ? '사전 신청자' : '현장 등록자';
-  document.getElementById('result-icon').className = 'result-icon ' + type;
-  document.getElementById('result-icon').textContent = isDuplicate ? '!' : '✓';
-  document.getElementById('result-name').textContent = name;
-  document.getElementById('result-school').textContent = school;
-  document.getElementById('result-parking').textContent = parking === 1 ? '주차 함' : '주차 안 함';
-  document.getElementById('result-time').textContent = timestamp ? timestamp.split(' ')[1] || timestamp : '-';
+// 검정고시 체크박스 토글 - 입력란 비활성화/활성화
+function toggleGed(checked) {
+  const input = document.getElementById('walkin-school');
+  if (checked) {
+    input.value = '';
+    input.disabled = true;
+    input.classList.add('ged-disabled');
+    input.placeholder = '검정고시';
+  } else {
+    input.disabled = false;
+    input.classList.remove('ged-disabled');
+    input.placeholder = '가천고등학교';
+  }
+}
+
+/**
+ * 결과 화면 표시 - 단일/다인 모두 처리
+ * type: 'pre' | 'walk'
+ * results: [{ name, school, parking, success, timestamp, error, alreadyRegistered }]
+ */
+function showMultiResult(type, results) {
+  // 풀배경 클래스 적용
+  document.body.classList.remove('done-pre', 'done-walk');
+  document.body.classList.add(type === 'pre' ? 'done-pre' : 'done-walk');
+
+  // 라벨
+  document.getElementById('result-big-label').textContent = type === 'pre' ? '사전 신청' : '현장 등록';
+
+  const single = document.getElementById('result-single');
+  const multi = document.getElementById('result-multi');
+
+  if (results.length === 1) {
+    // 단일 표시
+    single.style.display = 'block';
+    multi.style.display = 'none';
+    const r = results[0];
+    document.getElementById('result-name').textContent = r.name;
+    document.getElementById('result-school').textContent = r.school;
+    document.getElementById('result-parking').textContent = r.parking === 1 ? '주차 함' : '주차 안 함';
+    const time = r.timestamp ? (r.timestamp.split(' ')[1] || r.timestamp) : '-';
+    document.getElementById('result-time').textContent = time;
+  } else {
+    // 다인 카드 표시
+    single.style.display = 'none';
+    multi.style.display = 'block';
+    const successCount = results.filter(r => r.success).length;
+    document.getElementById('result-multi-count').textContent = successCount + '/' + results.length;
+
+    const list = document.getElementById('result-multi-list');
+    list.innerHTML = results.map(r => {
+      const parkingLabel = r.parking === 1 ? '주차 함' : '주차 안 함';
+      let statusLabel = '등록됨';
+      let failedClass = '';
+      if (!r.success) {
+        failedClass = 'failed';
+        statusLabel = r.alreadyRegistered ? '이미 등록' : '등록 실패';
+      }
+      return `
+        <div class="multi-result-item ${failedClass}">
+          <div>
+            <div class="multi-result-item-name">${escapeHtml(r.name)}</div>
+            <div class="multi-result-item-sub">${escapeHtml(r.school || '')} · ${parkingLabel}</div>
+          </div>
+          <div class="multi-result-item-status">${statusLabel}</div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  // 진동 (성공 시에만 - iOS Safari는 미지원이지만 Android는 동작)
+  const anySuccess = results.some(r => r.success);
+  if (anySuccess && navigator.vibrate) {
+    try { navigator.vibrate([100, 50, 100]); } catch (e) {}
+  }
+
   showStep('done');
 }
 
 function reset() {
-  state = { phone: '', matches: [], selected: null, parking: null, mode: 'attendee', adminPw: state.adminPw, records: [] };
+  // 풀배경 해제
+  document.body.classList.remove('done-pre', 'done-walk');
+
+  state = {
+    phone: '',
+    matches: [],
+    selectedIndices: [],
+    parkingMode: 'bulk',
+    parkingBulk: null,
+    parkingIndividual: {},
+    parking: null,
+    mode: state.mode,
+    adminPw: state.adminPw,
+    records: state.records
+  };
   document.getElementById('input-phone').value = '';
   document.getElementById('walkin-name').value = '';
   document.getElementById('walkin-school').value = '';
   document.getElementById('walkin-phone').value = '';
+  // 검정고시 체크박스 초기화
+  const gedCheckbox = document.getElementById('walkin-ged');
+  if (gedCheckbox) {
+    gedCheckbox.checked = false;
+    toggleGed(false);
+  }
   document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('btn-submit-pre').disabled = true;
   showStep('phone');
@@ -1153,6 +1980,7 @@ async function loadAdminData() {
   }
   state.records = records.records;
   renderStats(stats.stats);
+  renderChart();
   renderTable();
   document.getElementById('admin-sub').textContent = '마지막 업데이트: ' + new Date().toLocaleTimeString('ko-KR');
   return true;
@@ -1184,6 +2012,154 @@ function renderStats(s) {
   `;
 }
 
+/**
+ * 시간대별 누적 출석 SVG 라인 차트 렌더링
+ * - 등록현황 데이터를 10분 단위 버킷으로 집계
+ * - 사전신청 / 현장등록 / 총합 3개 라인 표시
+ */
+function renderChart() {
+  const area = document.getElementById('chart-area');
+  if (!area) return;
+
+  if (!state.records || state.records.length === 0) {
+    area.innerHTML = '<div class="chart-empty">아직 등록된 출석이 없습니다.</div>';
+    return;
+  }
+
+  // 1. 타임스탬프 파싱 ('yyyy-MM-dd HH:mm:ss' 형식 가정)
+  const parsed = state.records.map(r => {
+    const ts = String(r.timestamp || '');
+    const m = ts.match(/(\d{4})-(\d{2})-(\d{2})\s+(\d{2}):(\d{2}):(\d{2})/);
+    if (!m) return null;
+    const date = new Date(+m[1], +m[2] - 1, +m[3], +m[4], +m[5], +m[6]);
+    return { date, type: r.type };
+  }).filter(Boolean);
+
+  if (parsed.length === 0) {
+    area.innerHTML = '<div class="chart-empty">등록 시각 데이터를 분석할 수 없습니다.</div>';
+    return;
+  }
+
+  // 2. 시각 범위 계산 (10분 단위 정렬)
+  const times = parsed.map(p => p.date.getTime());
+  const minT = Math.min(...times);
+  const maxT = Math.max(...times);
+  const BUCKET_MS = 10 * 60 * 1000; // 10분
+  const startT = Math.floor(minT / BUCKET_MS) * BUCKET_MS;
+  const endT = Math.ceil(maxT / BUCKET_MS) * BUCKET_MS;
+  const bucketCount = Math.max(2, Math.round((endT - startT) / BUCKET_MS) + 1);
+
+  // 3. 버킷별 집계
+  const buckets = [];
+  for (let i = 0; i < bucketCount; i++) {
+    buckets.push({
+      time: startT + i * BUCKET_MS,
+      pre: 0,
+      walk: 0
+    });
+  }
+  parsed.forEach(p => {
+    const idx = Math.floor((p.date.getTime() - startT) / BUCKET_MS);
+    if (idx >= 0 && idx < bucketCount) {
+      if (p.type === '사전신청') buckets[idx].pre++;
+      else if (p.type === '현장등록') buckets[idx].walk++;
+    }
+  });
+
+  // 4. 누적 합계
+  let cumPre = 0, cumWalk = 0;
+  buckets.forEach(b => {
+    cumPre += b.pre;
+    cumWalk += b.walk;
+    b.cumPre = cumPre;
+    b.cumWalk = cumWalk;
+    b.cumTotal = cumPre + cumWalk;
+  });
+
+  // 5. SVG 좌표 계산
+  const W = 700, H = 180;
+  const PAD_LEFT = 40, PAD_RIGHT = 16, PAD_TOP = 14, PAD_BOTTOM = 28;
+  const plotW = W - PAD_LEFT - PAD_RIGHT;
+  const plotH = H - PAD_TOP - PAD_BOTTOM;
+
+  const maxValue = Math.max(...buckets.map(b => b.cumTotal), 1);
+  // Y축 눈금 (대략 4단계)
+  const yTicks = niceTicks(maxValue, 4);
+  const yMax = yTicks[yTicks.length - 1];
+
+  const xAt = (i) => PAD_LEFT + (bucketCount === 1 ? plotW / 2 : (i / (bucketCount - 1)) * plotW);
+  const yAt = (val) => PAD_TOP + plotH - (val / yMax) * plotH;
+
+  // 6. 패스 생성
+  const pathPre = buckets.map((b, i) => `${i === 0 ? 'M' : 'L'}${xAt(i).toFixed(1)},${yAt(b.cumPre).toFixed(1)}`).join(' ');
+  const pathWalk = buckets.map((b, i) => `${i === 0 ? 'M' : 'L'}${xAt(i).toFixed(1)},${yAt(b.cumWalk).toFixed(1)}`).join(' ');
+  const pathTotal = buckets.map((b, i) => `${i === 0 ? 'M' : 'L'}${xAt(i).toFixed(1)},${yAt(b.cumTotal).toFixed(1)}`).join(' ');
+  // 영역(area) - 총합 아래 채우기
+  const areaPath = pathTotal + ` L${xAt(bucketCount - 1).toFixed(1)},${(PAD_TOP + plotH).toFixed(1)} L${xAt(0).toFixed(1)},${(PAD_TOP + plotH).toFixed(1)} Z`;
+
+  // 7. X축 시각 라벨 (최대 5개 정도만 표시)
+  const labelStep = Math.max(1, Math.ceil(bucketCount / 5));
+  const xLabels = buckets.map((b, i) => {
+    if (i % labelStep !== 0 && i !== bucketCount - 1) return '';
+    const d = new Date(b.time);
+    const hh = String(d.getHours()).padStart(2, '0');
+    const mm = String(d.getMinutes()).padStart(2, '0');
+    return `<text class="axis-text" x="${xAt(i).toFixed(1)}" y="${(H - 8).toFixed(1)}" text-anchor="middle">${hh}:${mm}</text>`;
+  }).join('');
+
+  // 8. Y축 라벨
+  const yLabels = yTicks.map(t => {
+    const y = yAt(t);
+    return `
+      <line class="grid-line" x1="${PAD_LEFT}" y1="${y.toFixed(1)}" x2="${(W - PAD_RIGHT).toFixed(1)}" y2="${y.toFixed(1)}"/>
+      <text class="axis-text" x="${(PAD_LEFT - 6).toFixed(1)}" y="${(y + 3).toFixed(1)}" text-anchor="end">${t}</text>
+    `;
+  }).join('');
+
+  // 9. SVG 조립
+  area.innerHTML = `
+    <svg class="chart-svg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet">
+      ${yLabels}
+      <line class="axis-line" x1="${PAD_LEFT}" y1="${PAD_TOP}" x2="${PAD_LEFT}" y2="${(PAD_TOP + plotH).toFixed(1)}"/>
+      <line class="axis-line" x1="${PAD_LEFT}" y1="${(PAD_TOP + plotH).toFixed(1)}" x2="${(W - PAD_RIGHT).toFixed(1)}" y2="${(PAD_TOP + plotH).toFixed(1)}"/>
+      <path class="area-total" d="${areaPath}"/>
+      <path class="line-pre" d="${pathPre}"/>
+      <path class="line-walk" d="${pathWalk}"/>
+      <path class="line-total" d="${pathTotal}"/>
+      ${xLabels}
+    </svg>
+  `;
+
+  // 메타 정보 갱신
+  const meta = document.getElementById('chart-meta');
+  if (meta) {
+    const startD = new Date(startT);
+    const endD = new Date(endT);
+    const fmt = d => `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+    meta.textContent = `${fmt(startD)} ~ ${fmt(endD)} · 10분 단위 · 누적 ${cumPre + cumWalk}명`;
+  }
+}
+
+// Y축 눈금을 보기 좋은 숫자로 정리 (예: 17 → [0, 5, 10, 15, 20])
+function niceTicks(maxVal, targetCount) {
+  if (maxVal <= targetCount) {
+    const ticks = [];
+    for (let i = 0; i <= maxVal; i++) ticks.push(i);
+    return ticks.length > 0 ? ticks : [0, 1];
+  }
+  const rough = maxVal / targetCount;
+  const mag = Math.pow(10, Math.floor(Math.log10(rough)));
+  const norm = rough / mag;
+  let step;
+  if (norm < 1.5) step = 1 * mag;
+  else if (norm < 3) step = 2 * mag;
+  else if (norm < 7) step = 5 * mag;
+  else step = 10 * mag;
+  const ticks = [];
+  for (let v = 0; v <= maxVal + step; v += step) ticks.push(Math.round(v));
+  return ticks;
+}
+
 function renderTable() {
   const tbody = document.getElementById('table-body');
   const search = document.getElementById('search-input').value.toLowerCase();
@@ -1211,7 +2187,12 @@ function renderTable() {
       <td>${escapeHtml(r.school)}</td>
       <td>${escapeHtml(r.parking)}</td>
       <td style="color:var(--ink-mute);font-size:12px;">${escapeHtml(r.note)}</td>
-      <td><button class="icon-btn" onclick="openEdit(${r.rowIndex})">수정</button></td>
+      <td>
+        <div class="action-btns">
+          <button class="icon-btn" onclick="openEdit(${r.rowIndex})">수정</button>
+          <button class="icon-btn danger" onclick="openDelete(${r.rowIndex})">삭제</button>
+        </div>
+      </td>
     </tr>
   `).join('');
 }
@@ -1253,6 +2234,56 @@ async function saveEdit() {
     return;
   }
   closeEdit();
+  loadAdminData();
+}
+
+// ==================== 삭제 모달 ====================
+let deletingRow = null;
+function openDelete(rowIndex) {
+  const r = state.records.find(x => x.rowIndex === rowIndex);
+  if (!r) return;
+  deletingRow = rowIndex;
+  document.getElementById('delete-target-info').innerHTML = `
+    <strong>${escapeHtml(r.name)}</strong>
+    <span style="color: var(--ink-mute); font-size: 12px;"> · ${escapeHtml(r.type)}</span><br>
+    <span style="color: var(--ink-soft);">${escapeHtml(r.school)} · ${formatPhone(r.phone)}</span>
+  `;
+  clearAlert('alert-delete');
+  document.getElementById('delete-step-1').style.display = 'block';
+  document.getElementById('delete-step-2').style.display = 'none';
+  document.getElementById('modal-delete').classList.add('show');
+}
+
+function closeDelete() {
+  document.getElementById('modal-delete').classList.remove('show');
+  deletingRow = null;
+}
+
+function confirmDeleteStep1() {
+  // 1단계 확인 → 2단계로 전환
+  document.getElementById('delete-step-1').style.display = 'none';
+  document.getElementById('delete-step-2').style.display = 'block';
+}
+
+async function executeDelete() {
+  if (!deletingRow) return;
+  const btn = document.getElementById('btn-delete-final');
+  btn.disabled = true;
+  btn.textContent = '삭제 중...';
+
+  const res = await callApi('deleteRecord', {
+    data: { rowIndex: deletingRow },
+    password: state.adminPw
+  });
+
+  btn.disabled = false;
+  btn.textContent = '예, 삭제합니다';
+
+  if (!res.success) {
+    showAlert('alert-delete', res.error || '삭제 실패');
+    return;
+  }
+  closeDelete();
   loadAdminData();
 }
 
