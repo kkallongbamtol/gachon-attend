@@ -1402,16 +1402,21 @@ let state = {
 
 // URL 해시로 모드 분기
 function checkMode() {
+  const modeSwitch = document.querySelector('.mode-switch');
   if (location.hash === '#admin') {
     state.mode = 'admin';
     document.getElementById('app-attendee').style.display = 'none';
     document.getElementById('app-admin').style.display = 'block';
     document.getElementById('mode-link').textContent = '참석자 보기';
+    // 관리자 화면에서는 [참석자 보기] 링크 노출
+    if (modeSwitch) modeSwitch.style.display = 'block';
   } else {
     state.mode = 'attendee';
     document.getElementById('app-attendee').style.display = 'block';
     document.getElementById('app-admin').style.display = 'none';
     document.getElementById('mode-link').textContent = '관리자 보기';
+    // 참석자 화면에서는 [관리자 보기] 링크 완전 숨김 (학생/학부모에게 노출 차단)
+    if (modeSwitch) modeSwitch.style.display = 'none';
   }
 }
 function toggleMode() {
@@ -1444,7 +1449,14 @@ async function callApi(action, params = {}) {
 
 
 // ==================== 유틸 ====================
-function normalizePhone(p) { return String(p || '').replace(/[^0-9]/g, ''); }
+function normalizePhone(p) {
+  let digits = String(p || '').replace(/[^0-9]/g, '');
+  // 시트에서 앞 0이 빠진 10자리 케이스 자동 복원 (서버와 동일 로직)
+  if (digits.length === 10 && digits.charAt(0) === '1') {
+    digits = '0' + digits;
+  }
+  return digits;
+}
 function formatPhone(p) {
   const n = normalizePhone(p);
   if (n.length === 11) return `${n.slice(0,3)}-${n.slice(3,7)}-${n.slice(7)}`;
@@ -1876,8 +1888,7 @@ function showMultiResult(type, results) {
     document.getElementById('result-name').textContent = r.name;
     document.getElementById('result-school').textContent = r.school;
     document.getElementById('result-parking').textContent = r.parking === 1 ? '주차 함' : '주차 안 함';
-    const time = r.timestamp ? (r.timestamp.split(' ')[1] || r.timestamp) : '-';
-    document.getElementById('result-time').textContent = time;
+    document.getElementById('result-time').textContent = extractTime(r.timestamp);
   } else {
     // 다인 카드 표시
     single.style.display = 'none';
@@ -1948,6 +1959,32 @@ function reset() {
 
 function escapeHtml(s) {
   return String(s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+/**
+ * 다양한 timestamp 형식에서 HH:mm:ss 부분만 안전하게 추출
+ * - 'yyyy-MM-dd HH:mm:ss' → 'HH:mm:ss'
+ * - ISO 8601 'yyyy-MM-ddTHH:mm:ss...' → 'HH:mm:ss'
+ * - Date.toString() 결과 'Thu May 01 2026 21:01:00 GMT...' → 'HH:mm:ss'
+ * - 빈값 → '-'
+ */
+function extractTime(ts) {
+  if (!ts) return '-';
+  const s = String(ts);
+  // HH:mm 또는 HH:mm:ss 패턴 찾기
+  const m = s.match(/(\d{1,2}):(\d{2})(?::(\d{2}))?/);
+  if (m) {
+    const hh = m[1].padStart(2, '0');
+    const mm = m[2];
+    const ss = m[3] || '00';
+    return `${hh}:${mm}:${ss}`;
+  }
+  // 매칭 실패 시 Date 객체로 한 번 더 시도
+  const d = new Date(s);
+  if (!isNaN(d.getTime())) {
+    return `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}:${String(d.getSeconds()).padStart(2,'0')}`;
+  }
+  return s;  // 마지막 fallback - 원본 그대로
 }
 
 
@@ -2026,12 +2063,19 @@ function renderChart() {
     return;
   }
 
-  // 1. 타임스탬프 파싱 ('yyyy-MM-dd HH:mm:ss' 형식 가정)
+  // 1. 타임스탬프 파싱 (서버는 'yyyy-MM-dd HH:mm:ss' 반환, 다른 형식도 fallback)
   const parsed = state.records.map(r => {
     const ts = String(r.timestamp || '');
     const m = ts.match(/(\d{4})-(\d{2})-(\d{2})\s+(\d{2}):(\d{2}):(\d{2})/);
-    if (!m) return null;
-    const date = new Date(+m[1], +m[2] - 1, +m[3], +m[4], +m[5], +m[6]);
+    let date;
+    if (m) {
+      date = new Date(+m[1], +m[2] - 1, +m[3], +m[4], +m[5], +m[6]);
+    } else {
+      // fallback: 표준 Date 파싱 (ISO, RFC 등)
+      const d = new Date(ts);
+      if (isNaN(d.getTime())) return null;
+      date = d;
+    }
     return { date, type: r.type };
   }).filter(Boolean);
 
