@@ -1308,6 +1308,22 @@
 
   <!-- 통계 + 테이블 -->
   <div id="admin-content" style="display:none;">
+    <!-- 행사명 설정 (GitHub 업로드·재배포 없이 즉시 변경) -->
+    <section class="card" style="margin-bottom:20px;">
+      <div class="step-label">행사 설정</div>
+      <div id="alert-config"></div>
+      <div style="display:flex; gap:8px; align-items:flex-end; flex-wrap:wrap;">
+        <div style="flex:1; min-width:220px;">
+          <label class="field-label">행사명 (참석자 화면 제목)</label>
+          <input type="text" class="input" id="config-event-name" placeholder="예: 2027학년도 수시 설명회">
+        </div>
+        <button class="btn" id="btn-save-config" style="width:auto; padding:14px 22px;" onclick="saveEventName()">저장</button>
+      </div>
+      <p style="font-size:12px; color:var(--ink-mute); margin-top:8px;">
+        저장하면 스프레드시트 <strong>설정</strong> 시트에 기록되고, 참석자 화면 제목에 바로 반영됩니다. (GitHub 업로드·재배포 불필요)
+      </p>
+    </section>
+
     <div class="admin-grid" id="stat-grid"></div>
 
     <!-- 시간대별 누적 출석 차트 -->
@@ -1455,9 +1471,10 @@
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzDeuETwDXDeFSX7-aGXaZIT5JxgmrRyZdzg3A3blTjZyn4ZqbPwp5o62KZNE9r_GI/exec';
 
 /* ============================================================
-   행사명: 다른 행사에 재사용할 때 이 줄의 문구만 바꾸면
-   참석자 화면 제목·브라우저 탭 제목이 한 번에 바뀝니다.
-   예) '2027학년도 수시 설명회', '2027 정시 박람회'
+   행사명 기본값(폴백)
+   - 실제 행사명은 이제 '관리자 화면 → 행사 설정' 또는
+     스프레드시트 '설정' 시트의 B2 셀에서 바꿉니다. (재배포 불필요)
+   - 이 값은 서버 응답이 오기 전 잠깐 보여줄 기본 문구일 뿐입니다.
    ============================================================ */
 const EVENT_NAME = '2027학년도 입시 설명회';
 /* ============================================================ */
@@ -2087,6 +2104,8 @@ async function adminLogin() {
   if (result) {
     document.getElementById('admin-login').style.display = 'none';
     document.getElementById('admin-content').style.display = 'block';
+    // 행사명 입력칸에 현재 값 채우기
+    loadConfig();
     // 자동 새로고침 (30초)
     setInterval(loadAdminData, 30000);
   }
@@ -2446,17 +2465,51 @@ function exportExcel() {
 }
 
 // 행사명 주입 - 참석자 화면 제목 + 브라우저 탭 제목
-function applyEventName() {
-  const name = (typeof EVENT_NAME === 'string' && EVENT_NAME.trim()) ? EVENT_NAME.trim() : '입시 설명회';
+function applyEventNameValue(name) {
+  const n = (name && String(name).trim()) ? String(name).trim() : '입시 설명회';
   const titleEl = document.getElementById('attendee-title');
-  if (titleEl) titleEl.innerHTML = escapeHtml(name) + '<br>출석 등록';
-  document.title = name + ' 출석 등록';
+  if (titleEl) titleEl.innerHTML = escapeHtml(n) + '<br>출석 등록';
+  document.title = n + ' 출석 등록';
   // CSV 다운로드 파일명에도 행사명 반영 위해 전역 보관
-  window.__EVENT_NAME = name;
+  window.__EVENT_NAME = n;
+}
+// 코드 상단 EVENT_NAME 상수로 일단 즉시 표시 (서버 응답 전 기본값)
+function applyEventName() {
+  applyEventNameValue(typeof EVENT_NAME === 'string' ? EVENT_NAME : '');
+}
+
+// 서버(설정 시트)에서 행사명을 불러와 화면에 반영
+async function loadConfig() {
+  const res = await callApi('getConfig');
+  if (res && res.success && res.eventName) {
+    applyEventNameValue(res.eventName);
+    const inp = document.getElementById('config-event-name');
+    if (inp && !inp.value) inp.value = res.eventName;
+  }
+}
+
+// 관리자 화면: 행사명 저장
+async function saveEventName() {
+  clearAlert('alert-config');
+  const inp = document.getElementById('config-event-name');
+  const name = inp.value.trim();
+  if (!name) { showAlert('alert-config', '행사명을 입력해 주세요.'); return; }
+
+  const btn = document.getElementById('btn-save-config');
+  if (btn) { btn.disabled = true; btn.textContent = '저장 중...'; }
+
+  const res = await callApi('setConfig', { data: { eventName: name }, password: state.adminPw });
+
+  if (btn) { btn.disabled = false; btn.textContent = '저장'; }
+
+  if (!res.success) { showAlert('alert-config', res.error || '저장 실패'); return; }
+  applyEventNameValue(res.eventName || name);
+  showAlert('alert-config', '저장되었습니다. 참석자 화면을 새로 열면 바로 반영됩니다.', 'info');
 }
 
 // 초기화
-applyEventName();
+applyEventName();   // 1) 상수 기본값 즉시 표시
+loadConfig();       // 2) 서버 설정값으로 덮어쓰기 (비동기)
 checkMode();
 </script>
 
