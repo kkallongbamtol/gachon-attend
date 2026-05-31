@@ -643,6 +643,20 @@
   }
   body.done-walk .result-fullscreen { color: var(--gachon-navy-deep); }
 
+  /* 등록 카드 상단 행사명 - 어느 행사 카드인지 식별용 */
+  .result-fullscreen .result-event {
+    font-family: 'Gowun Batang', serif;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    margin-bottom: 18px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid currentColor;
+    opacity: 0.85;
+    word-break: keep-all;
+  }
+  .result-fullscreen .result-event:empty { display: none; }
+
   .result-fullscreen .big-label {
     font-family: 'Gowun Batang', serif;
     font-size: 32px;
@@ -1235,6 +1249,7 @@
   <!-- STEP 완료: 결과 (풀배경 + 큰 라벨) -->
   <section class="card fade-in" id="step-done" style="display:none;">
     <div class="result-fullscreen">
+      <div class="result-event" id="result-event"></div>
       <div class="big-label" id="result-big-label">사전 신청</div>
 
       <!-- 단일 등록 표시 -->
@@ -1971,6 +1986,10 @@ function showMultiResult(type, results) {
 
   // 라벨
   document.getElementById('result-big-label').textContent = type === 'pre' ? '사전 신청' : '현장 등록';
+
+  // 행사명 (어느 행사 카드인지 식별 - 지난 행사 캡처 재사용 방지)
+  const eventEl = document.getElementById('result-event');
+  if (eventEl) eventEl.textContent = window.__EVENT_NAME || '';
 
   const single = document.getElementById('result-single');
   const multi = document.getElementById('result-multi');
